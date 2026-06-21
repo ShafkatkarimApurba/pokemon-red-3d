@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PlayerController } from './core/PlayerController';
 import { CameraController } from './core/CameraController';
 import { Tree } from './entities/Tree';
+import { EncounterSystem } from './systems/EncounterSystem';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -39,7 +40,7 @@ scene.add(ground);
 
 playerController.setCollider(ground);
 
-// === Add some trees for environment ===
+// === Add some trees ===
 const treePositions = [
   { x: -8, z: -6 },
   { x: 7, z: -8 },
@@ -53,6 +54,18 @@ treePositions.forEach(pos => {
   tree.position.set(pos.x, 0, pos.z);
   scene.add(tree);
 });
+
+// === Add grass encounter area ===
+const grassGeometry = new THREE.PlaneGeometry(12, 12);
+const grassMaterial = new THREE.MeshLambertMaterial({ color: 0x22c55e });
+const grass = new THREE.Mesh(grassGeometry, grassMaterial);
+grass.rotation.x = -Math.PI / 2;
+grass.position.set(-5, 0.01, -3); // Slightly above ground to avoid z-fighting
+scene.add(grass);
+
+// === Encounter System ===
+const encounterSystem = new EncounterSystem();
+encounterSystem.addGrassArea(grass);
 
 // === Camera Controller ===
 const cameraController = new CameraController(camera, player);
@@ -69,8 +82,11 @@ function animate() {
   // Update player movement + collision
   playerController.update(delta, player);
 
-  // Update smooth camera follow
+  // Update camera
   cameraController.update();
+
+  // Check for wild encounters
+  encounterSystem.update(player.position);
 
   renderer.render(scene, camera);
 }
@@ -84,4 +100,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Basic environment added with trees.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Wild grass encounter system added.', 'color: #4ade80');
