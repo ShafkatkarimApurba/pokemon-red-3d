@@ -15,14 +15,16 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+// Lighting (improved)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(10, 20, 10);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+directionalLight.position.set(15, 30, 15);
+directionalLight.castShadow = true;
 scene.add(directionalLight);
 
 // === Player Character ===
@@ -38,6 +40,7 @@ const groundGeometry = new THREE.PlaneGeometry(50, 50);
 const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x4ade80 });
 const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
 scene.add(ground);
 
 playerController.setCollider(ground);
@@ -47,7 +50,7 @@ const mainPath = new Path(3, 30);
 mainPath.position.set(0, 0.02, 0);
 scene.add(mainPath);
 
-// === Add a house (e.g. Professor Oak's lab style) ===
+// === Add a house ===
 const house = new House();
 house.position.set(12, 0, -8);
 scene.add(house);
@@ -75,9 +78,11 @@ grass.rotation.x = -Math.PI / 2;
 grass.position.set(-5, 0.01, -3);
 scene.add(grass);
 
-// === Encounter System ===
+// === Encounter System + UI ===
 const encounterSystem = new EncounterSystem();
 encounterSystem.addGrassArea(grass);
+
+const uiManager = new UIManager();
 
 // === Camera Controller ===
 const cameraController = new CameraController(camera, player);
@@ -114,4 +119,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] House and improved environment added.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Improved lighting and shadows added.', 'color: #4ade80');
