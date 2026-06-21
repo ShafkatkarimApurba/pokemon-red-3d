@@ -1,0 +1,1 @@
+A high-fidelity, browser-native 3D recreation of the legendary Pokémon Red, built with Three.js and modern web technologies.
