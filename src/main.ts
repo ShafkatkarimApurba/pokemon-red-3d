@@ -4,6 +4,7 @@ import { CameraController } from './core/CameraController';
 import { Tree } from './entities/Tree';
 import { EncounterSystem } from './systems/EncounterSystem';
 import { UIManager } from './ui/UIManager';
+import { PlayerCharacter } from './entities/PlayerCharacter';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -22,11 +23,9 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// === Player ===
-const playerGeometry = new THREE.BoxGeometry(1, 1.8, 1);
-const playerMaterial = new THREE.MeshLambertMaterial({ color: 0x3b82f6 });
-const player = new THREE.Mesh(playerGeometry, playerMaterial);
-player.position.y = 0.9;
+// === Player Character (instead of box) ===
+const player = new PlayerCharacter();
+player.position.y = 0;
 scene.add(player);
 
 // === Player Controller ===
@@ -86,12 +85,9 @@ function animate() {
   // Update camera
   cameraController.update();
 
-  // Check for wild encounters (and show UI message)
-  // Note: We override the console log behavior temporarily for demo
+  // Check for wild encounters (visual feedback)
   if (Math.random() < 0.01 && grass.position.distanceTo(player.position) < 8) {
-    // Trigger visual encounter message occasionally in grass
-    const ui = new UIManager();
-    ui.showEncounterMessage();
+    uiManager.showEncounterMessage();
   }
 
   renderer.render(scene, camera);
@@ -106,4 +102,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] UI + Encounter feedback ready.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Improved player character added.', 'color: #4ade80');
