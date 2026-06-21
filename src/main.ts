@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { PlayerController } from './core/PlayerController';
 import { CameraController } from './core/CameraController';
+import { Tree } from './entities/Tree';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -38,6 +39,21 @@ scene.add(ground);
 
 playerController.setCollider(ground);
 
+// === Add some trees for environment ===
+const treePositions = [
+  { x: -8, z: -6 },
+  { x: 7, z: -8 },
+  { x: -12, z: 4 },
+  { x: 10, z: 6 },
+  { x: -5, z: 10 },
+];
+
+treePositions.forEach(pos => {
+  const tree = new Tree();
+  tree.position.set(pos.x, 0, pos.z);
+  scene.add(tree);
+});
+
 // === Camera Controller ===
 const cameraController = new CameraController(camera, player);
 
@@ -68,4 +84,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Camera system improved. Use WASD to move.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Basic environment added with trees.', 'color: #4ade80');
