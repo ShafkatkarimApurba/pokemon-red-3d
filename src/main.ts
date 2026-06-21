@@ -7,6 +7,7 @@ import { UIManager } from './ui/UIManager';
 import { PlayerCharacter } from './entities/PlayerCharacter';
 import { Path } from './entities/Path';
 import { House } from './entities/House';
+import { BattleScene } from './scenes/BattleScene';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -18,7 +19,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Lighting (improved)
+// Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
@@ -87,6 +88,9 @@ const uiManager = new UIManager();
 // === Camera Controller ===
 const cameraController = new CameraController(camera, player);
 
+// === Battle Scene (initialized but not active yet) ===
+const battleScene = new BattleScene();
+
 // === Clock ===
 const clock = new THREE.Clock();
 
@@ -119,4 +123,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Improved lighting and shadows added.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] BattleScene structure initialized.', 'color: #4ade80');
