@@ -10,7 +10,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
-// Basic lighting
+// Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
@@ -22,24 +22,26 @@ scene.add(directionalLight);
 const playerGeometry = new THREE.BoxGeometry(1, 1.8, 1);
 const playerMaterial = new THREE.MeshLambertMaterial({ color: 0x3b82f6 });
 const player = new THREE.Mesh(playerGeometry, playerMaterial);
-player.position.y = 0.9; // stand on ground
+player.position.y = 0.9;
 scene.add(player);
 
 // === Player Controller ===
 const playerController = new PlayerController();
 
-// === Camera ===
-camera.position.set(0, 8, 12);
-camera.lookAt(player.position);
-
-// === Ground (Temporary) ===
+// === Ground with BVH Collision ===
 const groundGeometry = new THREE.PlaneGeometry(50, 50);
 const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x4ade80 });
 const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = -Math.PI / 2;
 scene.add(ground);
 
-// === Clock for delta time ===
+// Enable collision using three-mesh-bvh
+playerController.setCollider(ground);
+
+// === Camera ===
+camera.position.set(0, 8, 12);
+
+// === Clock ===
 const clock = new THREE.Clock();
 
 // === Animation Loop ===
@@ -48,10 +50,10 @@ function animate() {
 
   const delta = clock.getDelta();
 
-  // Update player movement
+  // Update player with collision support
   playerController.update(delta, player);
 
-  // Simple camera follow (will be improved later)
+  // Camera follow
   camera.position.x = player.position.x;
   camera.position.z = player.position.z + 12;
   camera.lookAt(player.position.x, player.position.y + 2, player.position.z);
@@ -61,11 +63,11 @@ function animate() {
 
 animate();
 
-// === Resize Handler ===
+// Resize
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Player Controller initialized. Use WASD or Arrow Keys to move.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Player with BVH collision ready. Use WASD to move.', 'color: #4ade80');
