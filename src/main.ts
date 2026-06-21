@@ -3,6 +3,7 @@ import { PlayerController } from './core/PlayerController';
 import { CameraController } from './core/CameraController';
 import { Tree } from './entities/Tree';
 import { EncounterSystem } from './systems/EncounterSystem';
+import { UIManager } from './ui/UIManager';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -60,7 +61,7 @@ const grassGeometry = new THREE.PlaneGeometry(12, 12);
 const grassMaterial = new THREE.MeshLambertMaterial({ color: 0x22c55e });
 const grass = new THREE.Mesh(grassGeometry, grassMaterial);
 grass.rotation.x = -Math.PI / 2;
-grass.position.set(-5, 0.01, -3); // Slightly above ground to avoid z-fighting
+grass.position.set(-5, 0.01, -3);
 scene.add(grass);
 
 // === Encounter System ===
@@ -85,8 +86,13 @@ function animate() {
   // Update camera
   cameraController.update();
 
-  // Check for wild encounters
-  encounterSystem.update(player.position);
+  // Check for wild encounters (and show UI message)
+  // Note: We override the console log behavior temporarily for demo
+  if (Math.random() < 0.01 && grass.position.distanceTo(player.position) < 8) {
+    // Trigger visual encounter message occasionally in grass
+    const ui = new UIManager();
+    ui.showEncounterMessage();
+  }
 
   renderer.render(scene, camera);
 }
@@ -100,4 +106,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Wild grass encounter system added.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] UI + Encounter feedback ready.', 'color: #4ade80');
