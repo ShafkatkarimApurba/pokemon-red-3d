@@ -5,6 +5,7 @@ import { Tree } from './entities/Tree';
 import { EncounterSystem } from './systems/EncounterSystem';
 import { UIManager } from './ui/UIManager';
 import { PlayerCharacter } from './entities/PlayerCharacter';
+import { Path } from './entities/Path';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -23,7 +24,7 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(10, 20, 10);
 scene.add(directionalLight);
 
-// === Player Character (instead of box) ===
+// === Player Character ===
 const player = new PlayerCharacter();
 player.position.y = 0;
 scene.add(player);
@@ -39,6 +40,11 @@ ground.rotation.x = -Math.PI / 2;
 scene.add(ground);
 
 playerController.setCollider(ground);
+
+// === Add paths ===
+const mainPath = new Path(3, 30);
+mainPath.position.set(0, 0.02, 0);
+scene.add(mainPath);
 
 // === Add some trees ===
 const treePositions = [
@@ -102,4 +108,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Improved player character added.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Paths and improved environment added.', 'color: #4ade80');
