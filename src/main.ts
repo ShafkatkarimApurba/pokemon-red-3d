@@ -6,6 +6,7 @@ import { EncounterSystem } from './systems/EncounterSystem';
 import { UIManager } from './ui/UIManager';
 import { PlayerCharacter } from './entities/PlayerCharacter';
 import { Path } from './entities/Path';
+import { House } from './entities/House';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -45,6 +46,11 @@ playerController.setCollider(ground);
 const mainPath = new Path(3, 30);
 mainPath.position.set(0, 0.02, 0);
 scene.add(mainPath);
+
+// === Add a house (e.g. Professor Oak's lab style) ===
+const house = new House();
+house.position.set(12, 0, -8);
+scene.add(house);
 
 // === Add some trees ===
 const treePositions = [
@@ -108,4 +114,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Paths and improved environment added.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] House and improved environment added.', 'color: #4ade80');
