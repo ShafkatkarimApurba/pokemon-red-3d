@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PlayerController } from './core/PlayerController';
+import { CameraController } from './core/CameraController';
 
 // === Scene Setup ===
 const scene = new THREE.Scene();
@@ -35,11 +36,10 @@ const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = -Math.PI / 2;
 scene.add(ground);
 
-// Enable collision using three-mesh-bvh
 playerController.setCollider(ground);
 
-// === Camera ===
-camera.position.set(0, 8, 12);
+// === Camera Controller ===
+const cameraController = new CameraController(camera, player);
 
 // === Clock ===
 const clock = new THREE.Clock();
@@ -50,13 +50,11 @@ function animate() {
 
   const delta = clock.getDelta();
 
-  // Update player with collision support
+  // Update player movement + collision
   playerController.update(delta, player);
 
-  // Camera follow
-  camera.position.x = player.position.x;
-  camera.position.z = player.position.z + 12;
-  camera.lookAt(player.position.x, player.position.y + 2, player.position.z);
+  // Update smooth camera follow
+  cameraController.update();
 
   renderer.render(scene, camera);
 }
@@ -70,4 +68,4 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log('%c[Pokémon Red 3D] Player with BVH collision ready. Use WASD to move.', 'color: #4ade80');
+console.log('%c[Pokémon Red 3D] Camera system improved. Use WASD to move.', 'color: #4ade80');
